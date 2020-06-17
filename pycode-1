@@ -1,0 +1,74 @@
+# -*- coding: utf-8 -*-
+'''
+Created on Mon Jun 15 17:47:05 2020
+
+@author: ChenShaonan PMKB
+'''
+
+SumEven=0
+for s1 in range(2,101,2):
+    SumEven=SumEven+s1
+print('\n Answer 1:'+'\n The sum of even-number from 2 to 100 is: '+str(SumEven)+'\n\n')
+
+import pandas as pd
+from pandas import Series, DataFrame
+
+#用函数在DataFrame中求和
+def SumThem(df):
+    df['Sum1']=(df['Chinese']+df['Math']+df['English'])
+    return df
+#录入数据
+Score1 = DataFrame({'Chinese': [68, 95, 98, 90,80], 
+                   'Math': [65, 76, 86, 88, 90], 
+                   'English': [30, 98, 88, 77, 90]},
+                   index = ['ZhangFei','GuanYu','LiuBei','DianWei','XuChu'],
+                   )
+print('\n Answer 2: \n The original Score is: \n')
+print(Score1)
+#在Score1中增加一列Sum1，即求和结果
+SumThem(Score1)
+print('\n\n Their Scores are sorted by Sum1: \n' )
+#按Sum1排序
+Score1.sort_values(by='Sum1',axis=0,ascending=False, inplace=True)
+
+print(Score1)
+#输出平均值、最小值、最大值、方差、标准差
+print ('\n Their Score Mean-value is: \n' +str(Score1.mean()))
+print ('\n Their Score Minimum-value is: \n' +str(Score1.min()))
+print ('\n Their Score Maximum-value is: \n' +str(Score1.max()))
+print ('\n Their Score Variant-value is: \n' +str(Score1.var()))
+print ('\n Their Score StandardVariant-value is: \n' +str(Score1.std()))
+#Score1.to_csv('E:\Learnig\data-1.csv')
+#Print('Saving CSV file is not friendly to Instructors!')
+
+
+
+import pandas as pd
+
+Read1 = pd.read_csv('E:\Learnig\car_complain.csv')
+
+Read1 = Read1.drop('problem', 1).join(Read1.problem.str.get_dummies(','))
+
+df1= Read1.groupby(['brand'])['id'].agg(['count'])
+print('\n\n\n Overview of Brand Complaints \n')
+print(df1)
+df1.to_csv('E:\Learnig\car_complain_brand.csv', index=False)
+
+
+df2= Read1.groupby(['car_model'])['id'].agg(['count'])
+print('\n\n\n Overview of Type Complaints \n')
+print(df2)
+df2.to_csv('E:\Learnig\car_complain_output_type.csv', index=False)
+
+
+df2 = df1.merge(df2, left_index=True, right_index=True, how='left')
+# 通过reset_index将DataFrameGroupBy => DataFrame
+df2.reset_index(inplace=True)
+
+df2= df2.sort_values('count', ascending=False)
+print(df2)
+
+
+print(df2.sort_values('sum', ascending=False))
+
+#df2.to_csv('E:\Learnig\car_complain_output.csv', index=False)
